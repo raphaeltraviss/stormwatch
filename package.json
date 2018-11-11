@@ -1,0 +1,19 @@
+{
+  "name": "stormwatch",
+  "version": "1.0.0",
+  "description": "Foundational NodeJs / React de-coupled symptom tracking app",
+  "main": "build_server/server.js",
+  "scripts": {
+    "test": "tape test_server/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raphaeltraviss/stormwatch.git"
+  },
+  "author": "Raphael Traviss",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/raphaeltraviss/stormwatch/issues"
+  },
+  "homepage": "https://github.com/raphaeltraviss/stormwatch#readme"
+}
