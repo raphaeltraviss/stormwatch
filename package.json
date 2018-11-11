@@ -4,6 +4,7 @@
   "description": "Foundational NodeJs / React de-coupled symptom tracking app",
   "main": "build_server/server.js",
   "scripts": {
+    "start": "node build_client.js",
     "test": "tape test_server/test.js"
   },
   "repository": {
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/raphaeltraviss/stormwatch/issues"
   },
-  "homepage": "https://github.com/raphaeltraviss/stormwatch#readme"
+  "homepage": "https://github.com/raphaeltraviss/stormwatch#readme",
+  "dependencies": {
+    "browserify": "^16.2.3",
+    "watchify": "^3.11.0"
+  }
 }
