@@ -1,6 +1,6 @@
 # Project-specific files
-./build_client
-./build_server
+build_client
+build_server
 
 # Logs
 logs
