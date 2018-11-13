@@ -1,8 +1,10 @@
 const browserify = require('browserify');
 const watchify = require('watchify');
 const fs = require('fs');
+const stream = require('stream');
 
 const client_outfile_path = './build_client/stormwatch_client.html';
+
 
 
 function bundle_client() {
@@ -16,13 +18,15 @@ function bundle_client() {
 
   function bundle_to_file() {
     fs.unlink(client_outfile_path, () => {
-      const outfile = fs.createWriteStream(client_outfile_path);
-      outfile.write(html_begin(), () => {
-        bundler.bundle().pipe(outfile);
-        outfile.on('finish', () => {
-          fs.appendFileSync(client_outfile_path, html_end());
-        });
-      });
+      const to_output_file = fs.createWriteStream(client_outfile_path);
+      const from_html_prefix = html_prefix();
+      const from_js_bundle = bundler.bundle();
+      const from_html_suffix = html_suffix();
+
+      from_html_prefix.pipe(to_output_file, { end: false });
+      from_html_prefix.on('end', () => { from_js_bundle.pipe(to_output_file, { end: false }) });
+      from_js_bundle.on('end', () => { from_html_suffix.pipe(to_output_file, { end: false }) });
+      from_html_suffix.on('end', () => { to_output_file.end() });
     })
   }
 
@@ -37,8 +41,10 @@ bundle_client();
 
 
 
-function html_begin() {
-  return `<!DOCTYPE html></script>
+function html_prefix() {
+  const html_stream = new stream.Readable();
+  html_stream._read = () => {};
+  html_stream.push(`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -48,13 +54,19 @@ function html_begin() {
 </head>
 <body>
   <h1>StormWatch</h1>
-  <script type="text/javascript">`;
+  <script type="text/javascript">`);
+  html_stream.push(null);
+  return html_stream;
 } 
 
-function html_end() {
-  return `
-    </script>
-  </body>
-  </html>
-`;
+function html_suffix() {
+  const html_stream = new stream.Readable();
+  html_stream._read = () => {};
+  html_stream.push(`
+  </script>
+</body>
+</html>
+`);
+  html_stream.push(null);
+  return html_stream;
 }
